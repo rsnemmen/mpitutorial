@@ -22,6 +22,11 @@ int main(int argc, char** argv) {
   int token;
   // Receive from the lower process and send to the higher process. Take care
   // of the special case when you are the first process to prevent deadlock.
+  /* This is how to make sense of the code below. Everytime a thread gets a
+     MPI_Recv without a send, it stays waiting for the input and hangs in the
+     corresponding line of code. Naturally, the first thread will then proceed,
+     initialize token, send and put the whole message passing in motion.
+   */
   if (world_rank != 0) {
     MPI_Recv(&token, 1, MPI_INT, world_rank - 1, 0, MPI_COMM_WORLD,
              MPI_STATUS_IGNORE);
